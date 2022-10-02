@@ -3,11 +3,11 @@ import json
 
 from PySide2.QtCore import (Signal, QObject)
 
-import envHandler
-import pipelineHandler
+from . import envHandler
+from . import pipelineHandler
 
-from envHandler import OB_EXTENSION
-from pipelineHandler import Pipeline
+from .envHandler import OB_EXTENSION
+from .pipelineHandler import Pipeline
 
 class ProjectKeys():
 	WorkDirectory = "Work_directory"

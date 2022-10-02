@@ -1,6 +1,8 @@
 import importlib
-importlib.import_module(envHandler)
-from envHandler import BaseENV, get_Env, set_Env
+from . import envHandler
+importlib.reload(envHandler)
+
+from .envHandler import BaseENV, get_Env, set_Env
 class Pipeline(object):
 	def __init__(self):
 		object.__init__(self)
