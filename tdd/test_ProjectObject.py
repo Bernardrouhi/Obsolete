@@ -7,7 +7,7 @@ if package_path not in sys.path:
 
 import unittest
 import Obsolete.envHandler as ObEnv
-import Obsolete.projectMetadata as ObPM
+import Obsolete.projectNode as ObPro
 
 FILE_ADDRESS = "E:/Project/Sample/"
 
@@ -29,29 +29,29 @@ class General_TDD(unittest.TestCase):
 
 		# expected result
 		result = {
-			ObPM.ProjectKeys.WorkDirectory: "",
-			ObPM.ProjectKeys.PublishDirectory: PublishDirectory,
-			ObPM.ProjectKeys.Project: projectName,
-			ObPM.ProjectKeys.AssetTypes:{assetType: [
+			ObPro.ProjectKeys.WorkDirectory: "",
+			ObPro.ProjectKeys.PublishDirectory: PublishDirectory,
+			ObPro.ProjectKeys.Project: projectName,
+			ObPro.ProjectKeys.AssetTypes:{assetType: [
 				{
-					ObPM.ProjectKeys.AssetSpace: AssetSpace1,
-					ObPM.ProjectKeys.WorkSpace: WorkSpace1,
+					ObPro.ProjectKeys.AssetSpace: AssetSpace1,
+					ObPro.ProjectKeys.WorkSpace: WorkSpace1,
 				},
 				{
-					ObPM.ProjectKeys.AssetSpace: AssetSpace2,
-					ObPM.ProjectKeys.WorkSpace: WorkSpace2,
+					ObPro.ProjectKeys.AssetSpace: AssetSpace2,
+					ObPro.ProjectKeys.WorkSpace: WorkSpace2,
 				},]
 			},
-			ObPM.ProjectKeys.Version:"1.0"
+			ObPro.ProjectKeys.Version:"1.0"
 		}
 
 		# ProjectObject
-		projectObj = ObPM.ProjectObject()
+		projectObj = ObPro.ProjectObject()
 		projectObj.set_ProjectName(project_name=projectName)
 
 		assetTypelist = []
-		assetTypelist.append(ObPM.AssetSpaceObject(AssetSpace=AssetSpace1, Workspace=WorkSpace1))
-		assetTypelist.append(ObPM.AssetSpaceObject(AssetSpace=AssetSpace2, Workspace=WorkSpace2))
+		assetTypelist.append(ObPro.AssetSpaceObject(AssetSpace=AssetSpace1, Workspace=WorkSpace1))
+		assetTypelist.append(ObPro.AssetSpaceObject(AssetSpace=AssetSpace2, Workspace=WorkSpace2))
 
 		projectObj.set_AssetType(assetType=assetType, assetSpaceList=assetTypelist)
 		projectObj.set_PublishDirectory(publish_directory=PublishDirectory)
@@ -67,12 +67,12 @@ class General_TDD(unittest.TestCase):
 		ProjectFilePath = os.path.join(os.path.dirname(FILE_ADDRESS), f"{projectName}{ObEnv.OB_EXTENSION}")
 
 		# ProjectObject
-		projectObj = ObPM.ProjectObject()
+		projectObj = ObPro.ProjectObject()
 		projectObj.set_ProjectName(project_name=projectName)
 
 		assetTypelist = []
 		for index in range(len(AssetSpace)):
-			assetTypelist.append(ObPM.AssetSpaceObject(AssetSpace=AssetSpace[index], Workspace=WorkSpace[index]))
+			assetTypelist.append(ObPro.AssetSpaceObject(AssetSpace=AssetSpace[index], Workspace=WorkSpace[index]))
 
 		projectObj.set_AssetType(assetType=assetType, assetSpaceList=assetTypelist)
 		projectObj.save(ProjectFile=ProjectFilePath)
@@ -82,16 +82,16 @@ class General_TDD(unittest.TestCase):
 		# Data
 		projectName = "Sample_03"
 		assetType = {"Character": [
-			ObPM.AssetSpaceObject(AssetSpace="Model", Workspace="Maya"),
-			ObPM.AssetSpaceObject(AssetSpace="Texture", Workspace="SubstancePainter").toJSON(),
-			ObPM.AssetSpaceObject(AssetSpace="Rig", Workspace="Maya"),
-			ObPM.AssetSpaceObject(AssetSpace="Animation", Workspace="Maya").toJSON()
+			ObPro.AssetSpaceObject(AssetSpace="Model", Workspace="Maya"),
+			ObPro.AssetSpaceObject(AssetSpace="Texture", Workspace="SubstancePainter").toJSON(),
+			ObPro.AssetSpaceObject(AssetSpace="Rig", Workspace="Maya"),
+			ObPro.AssetSpaceObject(AssetSpace="Animation", Workspace="Maya").toJSON()
 		]}
 		ProjectFilePath = os.path.join(os.path.dirname(FILE_ADDRESS), f"{projectName}{ObEnv.OB_EXTENSION}")
 
 
 		# ProjectObject
-		projectObj = ObPM.ProjectObject(ProjectName=projectName,AssetTypes=assetType)
+		projectObj = ObPro.ProjectObject(ProjectName=projectName,AssetTypes=assetType)
 		projectObj.save(ProjectFile=ProjectFilePath)
 		self.assertTrue(os.path.exists(ProjectFilePath))
 
@@ -99,10 +99,10 @@ class General_TDD(unittest.TestCase):
 		# Data
 		projectName = "Sample_04"
 		assetType = {"Character": [
-			ObPM.AssetSpaceObject(AssetSpace="Model", Workspace="Maya"),
-			ObPM.AssetSpaceObject(AssetSpace="Texture", Workspace="SubstancePainter").toJSON(),
-			ObPM.AssetSpaceObject(AssetSpace="Rig", Workspace="Maya"),
-			ObPM.AssetSpaceObject(AssetSpace="Animation", Workspace="Maya").toJSON()
+			ObPro.AssetSpaceObject(AssetSpace="Model", Workspace="Maya"),
+			ObPro.AssetSpaceObject(AssetSpace="Texture", Workspace="SubstancePainter").toJSON(),
+			ObPro.AssetSpaceObject(AssetSpace="Rig", Workspace="Maya"),
+			ObPro.AssetSpaceObject(AssetSpace="Animation", Workspace="Maya").toJSON()
 		]}
 		# adding extra none existent parameter
 		assetType["Character"][1]["Version"] = 20
@@ -110,7 +110,7 @@ class General_TDD(unittest.TestCase):
 
 
 		# ProjectObject
-		projectObj = ObPM.ProjectObject(ProjectName=projectName,AssetTypes=assetType)
+		projectObj = ObPro.ProjectObject(ProjectName=projectName,AssetTypes=assetType)
 		projectObj.save(ProjectFile=ProjectFilePath)
 		self.assertTrue(os.path.exists(ProjectFilePath))
 

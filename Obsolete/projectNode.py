@@ -2,7 +2,7 @@ import os
 import json
 
 from .envHandler import OB_EXTENSION, is_project_file
-from .pipelineHandler import Pipeline
+from .pipelineNode import Pipeline
 
 class ProjectKeys():
 	WorkDirectory = "Work_directory"
@@ -22,10 +22,8 @@ class AssetSpaceObject(object):
 	"""Handle AssetSpace object."""
 	def __init__(self, AssetSpace=str(), Workspace=str(), **kwargs):
 		self._data = self.ASSETSPACE_METADATA()
-		if AssetSpace:
-			self.set_AssetSpace(assetSpace=AssetSpace)
-		if Workspace:
-			self.set_WorkSpace(workSpace=Workspace)
+		if isinstance(AssetSpace, str) and AssetSpace : self.set_AssetSpace(assetSpace=AssetSpace)
+		if isinstance(Workspace, str) and Workspace : self.set_WorkSpace(workSpace=Workspace)
 
 	@staticmethod
 	def ASSETSPACE_METADATA():

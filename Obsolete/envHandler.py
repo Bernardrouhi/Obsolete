@@ -61,7 +61,6 @@ def is_project_file(filePath=str()):
 	"""
 	return filePath.lower().endswith(OB_EXTENSION) and os.path.exists(filePath)
 
-
 def check_project_file(projectfile=str()):
 	_projectfile = str()
 	if projectfile:
