@@ -5,18 +5,20 @@ from .envHandler import OB_EXTENSION, is_project_file
 from .pipelineNode import Pipeline
 
 class ProjectKeys():
-	WorkDirectory = "Work_directory"
-	PublishDirectory = "Publish_directory"
-	Project = "Project"
-	Version = "Version"
-	AssetTypes = "AssetTypes"
-	AssetSpace = "AssetSpace"
-	WorkSpace = "Workspace"
+	WORK_DIRECTORY = "Work_directory"
+	PUBLISH_DIRECTORY = "Publish_directory"
+	PROJECT = "Project"
+	VERSION = "Version"
+	ASSET_TYPES = "AssetTypes"
 
 class AssetSpaceKeys():
-	Maya = "Maya"
-	SusbtancePainter = "SubstancePainter"
-	Empty = "Empty"
+	ASSET_SPACE = "AssetSpace"
+	WORKSPACE = "Workspace"
+
+class WorkspaceKeys():
+	MAYA = "Maya"
+	SUBSTANCE_PAINTER = "SubstancePainter"
+	EMPTY = "Empty"
 
 class AssetSpaceObject(object):
 	"""Handle AssetSpace object."""
@@ -29,8 +31,8 @@ class AssetSpaceObject(object):
 	def ASSETSPACE_METADATA():
 		"""AssetSpace default Metadata structure"""
 		return {
-            ProjectKeys.AssetSpace:"", 
-            ProjectKeys.WorkSpace:""
+            AssetSpaceKeys.ASSET_SPACE:"", 
+            AssetSpaceKeys.WORKSPACE:""
             }.copy()
 
 	def set_AssetSpace(self, assetSpace=str()):
@@ -39,7 +41,7 @@ class AssetSpaceObject(object):
 			Parameters:
 			assetSpace (str) - Name of AssetSpace.
 		"""
-		self._data[ProjectKeys.AssetSpace] = assetSpace
+		self._data[AssetSpaceKeys.ASSET_SPACE] = assetSpace
 
 	def set_WorkSpace(self, workSpace=str()):
 		"""set the AssetSpace workspace.
@@ -47,7 +49,7 @@ class AssetSpaceObject(object):
 			Parameters:
 			workSpace (str) - Name of related application.
 		"""
-		self._data[ProjectKeys.WorkSpace] = workSpace
+		self._data[AssetSpaceKeys.WORKSPACE] = workSpace
 
 	def toJSON(self):
 		"""Serialized the object into dictionary.
@@ -62,7 +64,7 @@ class ProjectObject(object):
 	def __init__(self, ProjectFile=str(), WorkDirectory=str(), PublishDirectory=str(), ProjectName=str(), AssetTypes=dict()):
 		self._data = self.PROJECT_METADATA()
 		self._path = str(os.path.expanduser('~'))
-		self._version = self.PROJECT_METADATA()[ProjectKeys.Version]
+		self._version = self.PROJECT_METADATA()[ProjectKeys.VERSION]
 		self._pm = Pipeline()
 		self.setDefault()
 		if is_project_file(filePath=ProjectFile):
@@ -80,13 +82,13 @@ class ProjectObject(object):
 
 	@staticmethod
 	def PROJECT_METADATA():
-		"""Project default Metadata structure."""
+		"""Project default metadata structure."""
 		return {
-			ProjectKeys.WorkDirectory:"",
-			ProjectKeys.PublishDirectory:"",
-			ProjectKeys.Project:"",
-			ProjectKeys.AssetTypes:{},
-			ProjectKeys.Version:"1.0"
+			ProjectKeys.WORK_DIRECTORY:"",
+			ProjectKeys.PUBLISH_DIRECTORY:"",
+			ProjectKeys.PROJECT:"",
+			ProjectKeys.ASSET_TYPES:{},
+			ProjectKeys.VERSION:"1.0"
 		    }.copy()
 
 	def setDefault(self):
@@ -95,14 +97,14 @@ class ProjectObject(object):
 		if self._pm.get_ProjectName():
 			self.ProjectName = self._pm.get_ProjectName()
 		else:
-			self._pm.set_ProjectName(self._data[ProjectKeys.Project])
+			self._pm.set_ProjectName(self._data[ProjectKeys.PROJECT])
 
 
 		# Work Directory
 		if self._pm.get_WorkDirectory():
 			self.WorkDirectory = self._pm.get_WorkDirectory()
 		else:
-			self._pm.set_WorkDirectory(self._data[ProjectKeys.WorkDirectory])
+			self._pm.set_WorkDirectory(self._data[ProjectKeys.WORK_DIRECTORY])
 
 	def get_Version(self):
 		"""Get last opened directory.
@@ -140,7 +142,7 @@ class ProjectObject(object):
 			Parameters:
 			project_name (str) - Name of the Project.
 		"""
-		self._data[ProjectKeys.Project] = project_name
+		self._data[ProjectKeys.PROJECT] = project_name
 		self._pm.set_ProjectName(project_name)
 
 	def get_WorkDirectory(self):
@@ -156,7 +158,7 @@ class ProjectObject(object):
 			Parameters:
 			work_directory (str) - Path to project work directory.
 		"""
-		self._data[ProjectKeys.WorkDirectory] = work_directory
+		self._data[ProjectKeys.WORK_DIRECTORY] = work_directory
 		self._pm.set_WorkDirectory(work_directory)
 
 	def get_PublishDirectory(self):
@@ -172,25 +174,28 @@ class ProjectObject(object):
 			Parameters:
 			publish_directory (str) - Path to project work directory.
 		"""
-		self._data[ProjectKeys.PublishDirectory] = publish_directory
+		self._data[ProjectKeys.PUBLISH_DIRECTORY] = publish_directory
 		self._pm.set_PublishDirectory(publish_directory)
 
 	def get_AssetTypesName(self):
 		"""Get list of all the project AssetTypes"""
-		return self._data[ProjectKeys.AssetTypes].keys()
+		return self._data[ProjectKeys.ASSET_TYPES].keys()
 	def get_AssetTypes(self, asObject=bool(False)):
 		"""get the Project assetTypes.
 
-			Returns: get a dictionary of AssetType with serialized AssetSpace .
+			Parameters:
+			asObject (bool) - get the return type as AssetSpaceObject or JSON.
+
+			Returns: get a dictionary of AssetType with serialized AssetSpace.
 			Returns Types: dict
 		"""
 		data = {}
 		if asObject:
-			data = self._data[ProjectKeys.AssetTypes]
+			data = self._data[ProjectKeys.ASSET_TYPES]
 		else:
-			for assetTypeName in self._data[ProjectKeys.AssetTypes]:
+			for assetTypeName in self._data[ProjectKeys.ASSET_TYPES]:
 				data[assetTypeName] = []
-				for assetObj in self._data[ProjectKeys.AssetTypes][assetTypeName]:
+				for assetObj in self._data[ProjectKeys.ASSET_TYPES][assetTypeName]:
 					raw = assetObj.toJSON()
 					data[assetTypeName].append(raw)
 		return data
@@ -200,8 +205,8 @@ class ProjectObject(object):
 			Parameters:
 			assetType (str) - Name of AssetType.
 		"""
-		if assetType not in self._data[ProjectKeys.AssetTypes]:
-			self._data[ProjectKeys.AssetTypes][assetType] = list()
+		if assetType not in self._data[ProjectKeys.ASSET_TYPES]:
+			self._data[ProjectKeys.ASSET_TYPES][assetType] = list()
 	def set_AssetType(self, assetType=str, assetSpaceList=list):
 		"""Override the Project assetType.
 
@@ -209,7 +214,7 @@ class ProjectObject(object):
 			assetType (str) - Name of AssetType.
 			assetSpaceList (list) - List of AssetSpaces.
 		"""
-		self._data[ProjectKeys.AssetTypes][assetType] = []
+		self._data[ProjectKeys.ASSET_TYPES][assetType] = []
 		for assetSpace in assetSpaceList:
 			if isinstance(assetSpace, AssetSpaceObject):
 				self.add_AssetSpace(assetType=assetType, assetTypeObject=assetSpace)
@@ -219,15 +224,19 @@ class ProjectObject(object):
 	def get_AssetSpaces(self, assetType=str(), asObject=bool(False)):
 		"""get the AssetType AssetSpaces.
 
-			Returns: List of AssetSpace .
+			Parameters:
+			assetType (str) - Name of AssetType.
+			asObject (bool) - get the return type as AssetSpaceObject or JSON.
+
+			Returns: List of AssetSpace.
 			Returns Types: list
 		"""
 		assetSpaces = list()
-		if assetType in self._data[ProjectKeys.AssetTypes]:
+		if assetType in self._data[ProjectKeys.ASSET_TYPES]:
 			if asObject:
-				assetSpaces = self._data[ProjectKeys.AssetTypes][assetType]
+				assetSpaces = self._data[ProjectKeys.ASSET_TYPES][assetType]
 			else:
-				for assetSpace in self._data[ProjectKeys.AssetTypes][assetType]:
+				for assetSpace in self._data[ProjectKeys.ASSET_TYPES][assetType]:
 					assetSpaces.append(assetSpace.toJSON())
 		return assetSpaces
 	def add_AssetSpace(self, assetType=str, assetTypeObject=AssetSpaceObject):
@@ -237,9 +246,9 @@ class ProjectObject(object):
 			assetType (str) - Name of AssetType.
 			assetTypeObject (AssetSpaceObject) - AssetSpace object reference.
 		"""
-		if assetType not in self._data[ProjectKeys.AssetTypes]:
+		if assetType not in self._data[ProjectKeys.ASSET_TYPES]:
 			self.add_AssetType(assetType=assetType)
-		self._data[ProjectKeys.AssetTypes][assetType].append(assetTypeObject)
+		self._data[ProjectKeys.ASSET_TYPES][assetType].append(assetTypeObject)
 
 	def update_settings(self, project_name=str, work_directory=str):
 		"""update all the settings.
@@ -264,18 +273,18 @@ class ProjectObject(object):
 				# Load project file
 				if outfile:
 					LoadedData = json.load(outfile)
-					if ProjectKeys.Version in LoadedData:
-						self._version = LoadedData[ProjectKeys.Version]
-						if LoadedData[ProjectKeys.Version] == "1.0":
-							if ProjectKeys.Project in LoadedData:
-								self.set_ProjectName(project_name=LoadedData[ProjectKeys.Project])
-							if ProjectKeys.WorkDirectory in LoadedData:
-								self.set_WorkDirectory(work_directory=LoadedData[ProjectKeys.WorkDirectory])
-							if ProjectKeys.AssetTypes in LoadedData:
-								for assetType in LoadedData[ProjectKeys.AssetTypes]:
-									self.set_AssetType(assetType=assetType, assetSpaceList=LoadedData[ProjectKeys.AssetTypes][assetType])
-							if ProjectKeys.PublishDirectory in LoadedData:
-								self.set_PublishDirectory(publish_directory=LoadedData[ProjectKeys.PublishDirectory])
+					if ProjectKeys.VERSION in LoadedData:
+						self._version = LoadedData[ProjectKeys.VERSION]
+						if LoadedData[ProjectKeys.VERSION] == "1.0":
+							if ProjectKeys.PROJECT in LoadedData:
+								self.set_ProjectName(project_name=LoadedData[ProjectKeys.PROJECT])
+							if ProjectKeys.WORK_DIRECTORY in LoadedData:
+								self.set_WorkDirectory(work_directory=LoadedData[ProjectKeys.WORK_DIRECTORY])
+							if ProjectKeys.ASSET_TYPES in LoadedData:
+								for assetType in LoadedData[ProjectKeys.ASSET_TYPES]:
+									self.set_AssetType(assetType=assetType, assetSpaceList=LoadedData[ProjectKeys.ASSET_TYPES][assetType])
+							if ProjectKeys.PUBLISH_DIRECTORY in LoadedData:
+								self.set_PublishDirectory(publish_directory=LoadedData[ProjectKeys.PUBLISH_DIRECTORY])
 
 	def save(self, ProjectFile=str):
 		"""Save Projet file.
@@ -294,8 +303,12 @@ class ProjectObject(object):
 				json.dump(self.toJSON(), outfile, ensure_ascii=False, indent=4)
 
 	def toJSON(self):
-		"""Serialized the object into dictionary."""
+		"""Serialized the object into dictionary.
+
+			Returns: get a dictionary of ProjectObject.
+			Returns Types: dict
+		"""
 		nData = self._data.copy()
-		nData[ProjectKeys.WorkDirectory] = str()
-		nData[ProjectKeys.AssetTypes] = self.get_AssetTypes()
+		nData[ProjectKeys.WORK_DIRECTORY] = str()
+		nData[ProjectKeys.ASSET_TYPES] = self.get_AssetTypes()
 		return nData

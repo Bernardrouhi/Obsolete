@@ -20,29 +20,27 @@ class General_TDD(unittest.TestCase):
 		projectName = "Sample"
 		assetType = "Character"
 		AssetSpace1 = "Model"
-		WorkSpace1 = "Maya"
 		AssetSpace2 = "Texture"
-		WorkSpace2 = "SubstancePainter"
 		PublishDirectory = "E:/Project/SamplePublish"
 		ProjectFilePath = os.path.join(os.path.dirname(FILE_ADDRESS), f"{projectName}{ObEnv.OB_EXTENSION}")
 
 
 		# expected result
 		result = {
-			ObPro.ProjectKeys.WorkDirectory: "",
-			ObPro.ProjectKeys.PublishDirectory: PublishDirectory,
-			ObPro.ProjectKeys.Project: projectName,
-			ObPro.ProjectKeys.AssetTypes:{assetType: [
+			ObPro.ProjectKeys.WORK_DIRECTORY: "",
+			ObPro.ProjectKeys.PUBLISH_DIRECTORY: PublishDirectory,
+			ObPro.ProjectKeys.PROJECT: projectName,
+			ObPro.ProjectKeys.ASSET_TYPES:{assetType: [
 				{
-					ObPro.ProjectKeys.AssetSpace: AssetSpace1,
-					ObPro.ProjectKeys.WorkSpace: WorkSpace1,
+					ObPro.AssetSpaceKeys.ASSET_SPACE: AssetSpace1,
+					ObPro.AssetSpaceKeys.WORKSPACE: ObPro.WorkspaceKeys.MAYA,
 				},
 				{
-					ObPro.ProjectKeys.AssetSpace: AssetSpace2,
-					ObPro.ProjectKeys.WorkSpace: WorkSpace2,
+					ObPro.AssetSpaceKeys.ASSET_SPACE: AssetSpace2,
+					ObPro.AssetSpaceKeys.WORKSPACE: ObPro.WorkspaceKeys.SUBSTANCE_PAINTER,
 				},]
 			},
-			ObPro.ProjectKeys.Version:"1.0"
+			ObPro.ProjectKeys.VERSION:"1.0"
 		}
 
 		# ProjectObject
@@ -50,8 +48,8 @@ class General_TDD(unittest.TestCase):
 		projectObj.set_ProjectName(project_name=projectName)
 
 		assetTypelist = []
-		assetTypelist.append(ObPro.AssetSpaceObject(AssetSpace=AssetSpace1, Workspace=WorkSpace1))
-		assetTypelist.append(ObPro.AssetSpaceObject(AssetSpace=AssetSpace2, Workspace=WorkSpace2))
+		assetTypelist.append(ObPro.AssetSpaceObject(AssetSpace=AssetSpace1, Workspace=ObPro.WorkspaceKeys.MAYA))
+		assetTypelist.append(ObPro.AssetSpaceObject(AssetSpace=AssetSpace2, Workspace=ObPro.WorkspaceKeys.SUBSTANCE_PAINTER))
 
 		projectObj.set_AssetType(assetType=assetType, assetSpaceList=assetTypelist)
 		projectObj.set_PublishDirectory(publish_directory=PublishDirectory)

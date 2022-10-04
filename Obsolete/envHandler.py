@@ -1,6 +1,8 @@
 import os
 
 OB_EXTENSION = '.ob'
+PUBLISH_EXTENSION = ".obp"
+PUBLISH_FILE = f"Asset{PUBLISH_EXTENSION}"
 
 class BaseENV():
 	"""Environment Variables"""
@@ -53,13 +55,39 @@ def del_Env(key=str):
 	if is_Env(key):
 		del os.environ[key]
 
-def is_project_file(filePath=str()):
-	"""check the file exists and correct extension.
+def is_file_valid(filePath=str(), extension=str()):
+	"""check file exists with correct extension.
+
+		Parameters:
+		filePath (str) - absolute path of file.
+		extension (str) - extension of the file.
 
 		Returns: validation of filepath
 		Return Type: bool
 	"""
-	return filePath.lower().endswith(OB_EXTENSION) and os.path.exists(filePath)
+	return filePath.lower().endswith(extension.lower()) and os.path.exists(filePath)
+
+def is_project_file(filePath=str()):
+	"""check if file exists with correct Obsolete project extension.
+
+		Parameters:
+		filePath (str) - absolute path of Obsolete project file.
+
+		Returns: validation of filepath
+		Return Type: bool
+	"""
+	return is_file_valid(filePath=filePath, extension=OB_EXTENSION)
+
+def is_publish_file(filePath=str()):
+	"""check if file exists with correct Obsolete publish extension.
+
+		Parameters:
+		filePath (str) - absolute path of Obsolete publish file.
+
+		Returns: validation of filepath
+		Return Type: bool
+	"""
+	return is_file_valid(filePath=filePath, extension=PUBLISH_EXTENSION)
 
 def check_project_file(projectfile=str()):
 	_projectfile = str()
