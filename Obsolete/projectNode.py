@@ -35,6 +35,13 @@ class AssetSpaceObject(object):
             AssetSpaceKeys.WORKSPACE:""
             }.copy()
 
+	def get_AssetSpace(self):
+		"""get the AssetSpace name.
+
+			Returns: AssetApace name.
+			Return Type: str
+		"""
+		return self._data[AssetSpaceKeys.ASSET_SPACE]
 	def set_AssetSpace(self, assetSpace=str()):
 		"""set the AssetSpace name.
 
@@ -43,6 +50,13 @@ class AssetSpaceObject(object):
 		"""
 		self._data[AssetSpaceKeys.ASSET_SPACE] = assetSpace
 
+	def get_WorkSpace(self):
+		"""get the AssetSpace workspace.
+
+			Returns: AssetSpace workspace.
+			Return Type: str
+		"""
+		self._data[AssetSpaceKeys.WORKSPACE] = workSpace
 	def set_WorkSpace(self, workSpace=str()):
 		"""set the AssetSpace workspace.
 
