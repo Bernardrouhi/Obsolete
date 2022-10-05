@@ -3,6 +3,7 @@ import json
 from string import Template
 
 from .envHandler import OB_EXTENSION, is_project_file
+from .publishNode import PUBLISH_FILE
 from .pipelineNode import Pipeline
 
 class ProjectKeys():
@@ -200,6 +201,18 @@ class ProjectObject(object):
 		"""
 		self._data[ProjectKeys.PUBLISH_DIRECTORY] = publish_directory
 		self._pm.set_PublishDirectory(publish_directory)
+
+	def get_PublishedAssets(self):
+		publish_path = self.get_PublishDirectory()
+		if os.path.exists(publish_path):
+			assetTypes = self.get_AssetTypes(asObject=True)
+			for assetType in assetTypes.keys():
+				print (assetType)
+
+
+		# 	for root, dirs, files in os.walk(publish_path):
+		# 		if PUBLISH_FILE in files and root.endswith(tuple(assetSpaces)):
+		return
 
 	def get_AssetTypesName(self):
 		"""Get list of all the project AssetTypes"""
