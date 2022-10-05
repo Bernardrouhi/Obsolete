@@ -111,3 +111,12 @@ def check_project_env():
 	else:
 		set_Env(key=BaseENV.PROJECT_FILE, value="")
 	return ""
+
+def generate_Path(keys=[], validKeys=[]):
+	if validKeys:
+		return "/".join([a if a not in validKeys else f"${a}" for a in keys])
+	else:
+		return "/".join([f"${a}" for a in keys])
+
+def expand_path(path=str()):
+	return os.path.expandvars(path)

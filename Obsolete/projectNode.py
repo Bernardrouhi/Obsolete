@@ -1,5 +1,6 @@
 import os
 import json
+from string import Template
 
 from .envHandler import OB_EXTENSION, is_project_file
 from .pipelineNode import Pipeline
@@ -10,6 +11,15 @@ class ProjectKeys():
 	PROJECT = "Project"
 	VERSION = "Version"
 	ASSET_TYPES = "AssetTypes"
+
+	@staticmethod
+	def validKeys():
+		"""Get the list of valid keys for expanding the path
+
+			Returns: Valid keys.
+			Return Type: list
+		"""
+		return [ProjectKeys.WORK_DIRECTORY, ProjectKeys.PUBLISH_DIRECTORY, ProjectKeys.PROJECT]
 
 class AssetSpaceKeys():
 	ASSET_SPACE = "AssetSpace"
@@ -75,10 +85,10 @@ class AssetSpaceObject(object):
 
 class ProjectObject(object):
 	"""Handle Project file."""
+	__version__ = "1.0"
 	def __init__(self, ProjectFile=str(), WorkDirectory=str(), PublishDirectory=str(), ProjectName=str(), AssetTypes=dict()):
 		self._data = self.PROJECT_METADATA()
 		self._path = str(os.path.expanduser('~'))
-		self._version = self.PROJECT_METADATA()[ProjectKeys.VERSION]
 		self._pm = Pipeline()
 		self.setDefault()
 		if is_project_file(filePath=ProjectFile):
@@ -102,7 +112,7 @@ class ProjectObject(object):
 			ProjectKeys.PUBLISH_DIRECTORY:"",
 			ProjectKeys.PROJECT:"",
 			ProjectKeys.ASSET_TYPES:{},
-			ProjectKeys.VERSION:"1.0"
+			ProjectKeys.VERSION:ProjectObject.__version__
 		    }.copy()
 
 	def setDefault(self):
@@ -126,7 +136,7 @@ class ProjectObject(object):
 			Returns: version of the file (Major,Bug)
 			Return Type: tuple
 		"""
-		return tuple(self._version.split("."))
+		return tuple(self._dataVersion.split("."))
 
 	def get_LastPath(self):
 		"""Get last opened directory.
@@ -288,8 +298,8 @@ class ProjectObject(object):
 				if outfile:
 					LoadedData = json.load(outfile)
 					if ProjectKeys.VERSION in LoadedData:
-						self._version = LoadedData[ProjectKeys.VERSION]
-						if LoadedData[ProjectKeys.VERSION] == "1.0":
+						self._dataVersion= LoadedData[ProjectKeys.VERSION]
+						if LoadedData[ProjectKeys.VERSION] == __version__:
 							if ProjectKeys.PROJECT in LoadedData:
 								self.set_ProjectName(project_name=LoadedData[ProjectKeys.PROJECT])
 							if ProjectKeys.WORK_DIRECTORY in LoadedData:
@@ -316,13 +326,29 @@ class ProjectObject(object):
 			with open(file_path, 'w') as outfile:
 				json.dump(self.toJSON(), outfile, ensure_ascii=False, indent=4)
 
-	def toJSON(self):
+	def toJSON(self, clean=bool(True)):
 		"""Serialized the object into dictionary.
+
+			Parameters:
+			clean (bool) - clean the local work directory.
 
 			Returns: get a dictionary of ProjectObject.
 			Returns Types: dict
 		"""
 		nData = self._data.copy()
-		nData[ProjectKeys.WORK_DIRECTORY] = str()
+		if clean : nData[ProjectKeys.WORK_DIRECTORY] = str()
 		nData[ProjectKeys.ASSET_TYPES] = self.get_AssetTypes()
 		return nData
+
+	def expand_ProjectPath(self, templatePath=str):
+		"""expand the project Path from give template path.
+
+			Parameters:
+			templatePath (str) - template path.
+
+			Returns: expanded the project path
+			Return Type: str
+		"""
+		nPath = Template(templatePath).safe_substitute(self.toJSON(clean=False))
+		nPath = os.path.normpath(nPath).replace("\\","/")
+		return nPath
