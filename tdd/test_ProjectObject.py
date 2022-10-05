@@ -11,6 +11,9 @@ import Obsolete.projectNode as ObPro
 
 FILE_ADDRESS = "E:/Project/Sample/"
 
+if not os.path.exists(FILE_ADDRESS):
+	os.makedirs(FILE_ADDRESS)
+
 def setEnv():
 	ObEnv.set_Env(key=ObEnv.BaseENV.PROJECT_FILE, value=FILE_ADDRESS)
 
