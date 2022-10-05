@@ -181,7 +181,7 @@ class PublishObject(AssetObject):
 					LoadedData = json.load(outfile)
 					if PublishFileKeys.VERSION in LoadedData:
 						self._dataVersion = LoadedData[PublishFileKeys.VERSION]
-						if LoadedData[PublishFileKeys.VERSION] == __version__:
+						if LoadedData[PublishFileKeys.VERSION] == self.__version__:
 							if AssetKeys.ASSET_TYPE in LoadedData:
 								self.set_AssetType(assetType=LoadedData[AssetKeys.ASSET_TYPE])
 							if AssetKeys.ASSET_CONTAINER in LoadedData:

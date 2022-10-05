@@ -299,7 +299,7 @@ class ProjectObject(object):
 					LoadedData = json.load(outfile)
 					if ProjectKeys.VERSION in LoadedData:
 						self._dataVersion= LoadedData[ProjectKeys.VERSION]
-						if LoadedData[ProjectKeys.VERSION] == __version__:
+						if LoadedData[ProjectKeys.VERSION] == self.__version__:
 							if ProjectKeys.PROJECT in LoadedData:
 								self.set_ProjectName(project_name=LoadedData[ProjectKeys.PROJECT])
 							if ProjectKeys.WORK_DIRECTORY in LoadedData:

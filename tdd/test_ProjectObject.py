@@ -115,6 +115,13 @@ class General_TDD(unittest.TestCase):
 		projectObj.save(ProjectFile=ProjectFilePath)
 		self.assertTrue(os.path.exists(ProjectFilePath))
 
+	def test_LoadProjectFile(self):
+		# Data
+		# Server Start with \\\\ or //
+		projectFile = "E:\\Project\\Sample\\Sample.ob".replace("\\", "/")
+		project = ObPro.ProjectObject(ProjectFile=projectFile)
+
+		self.assertTrue(os.path.exists(projectFile))
 
 if __name__ == '__main__':
 	unittest.main()
